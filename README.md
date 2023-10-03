@@ -15,7 +15,7 @@ module.exports = {
 module.exports = {
   ...
   plugins: [
-    require("@bonehub/tailwind-dynamic-colors")({
+    require("tailwind-schemes")({
       light: {
         selector: "[data-theme='light']", // specify your css light selector
         color1: "red",
