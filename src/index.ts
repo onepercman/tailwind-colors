@@ -1,6 +1,6 @@
-import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
-import plugin from 'tailwindcss/plugin'
-import { RecursiveKeyValuePair } from 'tailwindcss/types/config'
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette"
+import plugin from "tailwindcss/plugin"
+import { RecursiveKeyValuePair } from "tailwindcss/types/config"
 
 export interface ColorConfig {
   DEFAULT: string
@@ -28,7 +28,7 @@ const isHexColor = (color: string): boolean => {
 
 const isRGBColor = (color: string): boolean => {
   const rgbStringRegex = RegExp(
-    /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/
+    /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/,
   )
   return rgbStringRegex.test(color)
 }
@@ -43,7 +43,7 @@ const getRGB = (color: string): string => {
     const rgb = color.replace(getRgbRegex, (m, r, g, b) => {
       return r + r + g + g + b + b
     })
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(rgb)
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(rgb) as any
     const r = parseInt(result[1], 16)
     const g = parseInt(result[2], 16)
     const b = parseInt(result[3], 16)
@@ -64,14 +64,11 @@ const withOpacity = (variableName) => {
 
 export default plugin.withOptions<Record<string, DynamicColorConfig>>(
   (themes) => {
-    // Add global variables
     return ({ addBase }) => {
       Object.keys(themes).forEach((theme) => {
-        const selector = theme['selector'] || `[data-theme="${theme}"]`
+        const selector = String(themes[theme]["selector"] || `[data-theme="${theme}"]`)
         const flatten = flattenColorPalette(themes[theme])
-        const base = Object.fromEntries(
-          Object.entries(flatten).map(([key]) => [`--${key}`, getRGB(flatten[key])])
-        )
+        const base = Object.fromEntries(Object.entries(flatten).map(([key]) => [`--${key}`, getRGB(flatten[key])]))
         addBase({
           [selector]: base,
         })
@@ -79,15 +76,11 @@ export default plugin.withOptions<Record<string, DynamicColorConfig>>(
     }
   },
   (themes) => {
-    // Add config colors
     let colors = {}
     Object.keys(themes).forEach((theme) => {
       const flatten = flattenColorPalette(themes[theme])
       const themeColors = Object.fromEntries(
-        Object.entries(flatten).map(([key, value]) => [
-          key,
-          canOpacitize(flatten[key]) ? withOpacity(key) : value,
-        ])
+        Object.entries(flatten).map(([key, value]) => [key, canOpacitize(flatten[key]) ? withOpacity(key) : value]),
       ) as RecursiveKeyValuePair<string, string>
       colors = {
         ...colors,
@@ -101,5 +94,5 @@ export default plugin.withOptions<Record<string, DynamicColorConfig>>(
         },
       },
     }
-  }
+  },
 )
