@@ -1,4 +1,4 @@
-# Tailwind schemes
+# Tailwind colors
 Here is a plugin that can help you configure colors for both lightmode and darkmode if you have too many colors but don't want to use tailwind's built-in "dark:" keyword.
 
 ## Usage
@@ -15,7 +15,7 @@ module.exports = {
 module.exports = {
   ...
   plugins: [
-    require("tailwind-schemes")({
+    require("tailwind-colors")({
       light: {
         selector: "[data-theme='light']", // specify your css light selector
         color1: "red",

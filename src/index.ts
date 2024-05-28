@@ -1,43 +1,25 @@
+import { TailwindColorsConfig } from "@types"
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette"
 import plugin from "tailwindcss/plugin"
 import { RecursiveKeyValuePair } from "tailwindcss/types/config"
 
-export interface ColorConfig {
-  DEFAULT: string
-  50: string
-  100: string
-  200: string
-  300: string
-  400: string
-  500: string
-  600: string
-  700: string
-  800: string
-  900: string
-  950: string
-}
-
-export interface DynamicColorConfig {
-  [key: string | number]: Partial<ColorConfig> | DynamicColorConfig | Record<any, string> | string
-}
-
-const isHexColor = (color: string): boolean => {
+function isHexColor(color: string): boolean {
   const hexColorRegex = RegExp(/^#([0-9a-f]{3}){1,2}$/i)
   return hexColorRegex.test(color)
 }
 
-const isRGBColor = (color: string): boolean => {
+function isRGBColor(color: string): boolean {
   const rgbStringRegex = RegExp(
     /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/,
   )
   return rgbStringRegex.test(color)
 }
 
-const canOpacitize = (color: string): boolean => {
+function canOpacitize(color: string): boolean {
   return isHexColor(color) || isRGBColor(color)
 }
 
-const getRGB = (color: string): string => {
+function getRGB(color: string): string {
   if (isHexColor(color)) {
     const getRgbRegex = RegExp(/^#?([a-f\d])([a-f\d])([a-f\d])$/i)
     const rgb = color.replace(getRgbRegex, (m, r, g, b) => {
@@ -55,36 +37,65 @@ const getRGB = (color: string): string => {
   return color
 }
 
-const withOpacity = (variableName) => {
+function withOpacity(variableName: string, prefix?: string) {
   return ({ opacityValue }) => {
-    if (opacityValue) return `rgba(var(--${variableName}), ${opacityValue})`
-    return `rgb(var(--${variableName}))`
+    if (opacityValue)
+      return `rgba(var(--${prefix ? `${prefix}-` : ""}${variableName}), ${opacityValue})`
+    return `rgb(var(--${prefix ? `${prefix}-` : ""}${variableName}))`
   }
 }
 
-export default plugin.withOptions<Record<string, DynamicColorConfig>>(
-  (themes) => {
+function getSelectorKey(
+  selector: TailwindColorsConfig["selector"],
+  scheme: string,
+): string {
+  if (selector === "class") {
+    return `.${scheme}`
+  }
+  return `[${selector}="${scheme}"]`
+}
+
+function getBaseVariables(colors: object, prefix?: string) {
+  const flatten = flattenColorPalette(colors)
+  return Object.fromEntries(
+    Object.entries(flatten).map(([key]) => [
+      `--${prefix ? `${prefix}-` : ""}${key}`,
+      getRGB(flatten[key]),
+    ]),
+  )
+}
+
+function getColorEntries(colors: object, prefix?: string) {
+  const flatten = flattenColorPalette(colors)
+
+  return Object.fromEntries(
+    Object.entries(flatten).map(([key, value]) => [
+      key,
+      canOpacitize(flatten[key]) ? withOpacity(key, prefix) : value,
+    ]),
+  ) as RecursiveKeyValuePair<string, string>
+}
+
+export default plugin.withOptions<TailwindColorsConfig>(
+  ({ schemes, selector = "data-theme", prefix = "color" }) => {
     return ({ addBase }) => {
-      Object.keys(themes).forEach((theme) => {
-        const selector = String(themes[theme]["selector"] || `[data-theme="${theme}"]`)
-        const flatten = flattenColorPalette(themes[theme])
-        const base = Object.fromEntries(Object.entries(flatten).map(([key]) => [`--${key}`, getRGB(flatten[key])]))
+      Object.keys(schemes).forEach((theme) => {
+        const selectorKey = getSelectorKey(selector, theme)
+        const base = getBaseVariables(schemes[theme], prefix)
         addBase({
-          [selector]: base,
+          [selectorKey]: base,
         })
       })
     }
   },
-  (themes) => {
+  ({ schemes, prefix }) => {
     let colors = {}
-    Object.keys(themes).forEach((theme) => {
-      const flatten = flattenColorPalette(themes[theme])
-      const themeColors = Object.fromEntries(
-        Object.entries(flatten).map(([key, value]) => [key, canOpacitize(flatten[key]) ? withOpacity(key) : value]),
-      ) as RecursiveKeyValuePair<string, string>
+    Object.keys(schemes).forEach((scheme) => {
+      const schemeColors = getColorEntries(schemes[scheme], prefix)
+
       colors = {
         ...colors,
-        ...themeColors,
+        ...schemeColors,
       }
     })
     return {
