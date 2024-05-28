@@ -24,7 +24,7 @@ This Tailwind CSS plugin provides a flexible way to define and use color schemes
 
    ```js
    // tailwind.config.js
-   const { schemes } = require('path-to-your-plugin')
+   const { schemes } = require('tailwind-schemes')
 
    module.exports = {
      // ... other configurations
@@ -51,7 +51,7 @@ This Tailwind CSS plugin provides a flexible way to define and use color schemes
            customTheme: {
              primary: '#00ff00',
              secondary: '#ffff00',
-             // More colors for the dark theme...
+             // More colors for the custom theme...
            },
          },
        }),
