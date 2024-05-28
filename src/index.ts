@@ -37,11 +37,10 @@ function getRGB(color: string): string {
   return color
 }
 
-function withOpacity(variableName: string, prefix?: string) {
+function withOpacity(variableName: string, prefix: string) {
   return ({ opacityValue }) => {
-    if (opacityValue)
-      return `rgba(var(--${prefix ? `${prefix}-` : ''}${variableName}), ${opacityValue})`
-    return `rgb(var(--${prefix ? `${prefix}-` : ''}${variableName}))`
+    if (opacityValue) return `rgba(var(--${prefix}-${variableName}), ${opacityValue})`
+    return `rgb(var(--${prefix}-${variableName}))`
   }
 }
 
@@ -52,17 +51,14 @@ function getSelectorKey(selector: TailwindColorsConfig['selector'], scheme: stri
   return `[${selector}="${scheme}"]`
 }
 
-function getBaseVariables(colors: object, prefix?: string) {
+function getBaseVariables(colors: object, prefix: string) {
   const flatten = flattenColorPalette(colors)
   return Object.fromEntries(
-    Object.entries(flatten).map(([key]) => [
-      `--${prefix ? `${prefix}-` : ''}${key}`,
-      getRGB(flatten[key]),
-    ])
+    Object.entries(flatten).map(([key]) => [`--${prefix}-${key}`, getRGB(flatten[key])])
   )
 }
 
-function getColorEntries(colors: object, prefix?: string) {
+function getColorEntries(colors: object, prefix: string) {
   const flatten = flattenColorPalette(colors)
 
   return Object.fromEntries(
@@ -74,7 +70,7 @@ function getColorEntries(colors: object, prefix?: string) {
 }
 
 export const schemes = plugin.withOptions<TailwindColorsConfig>(
-  ({ schemes, selector = 'data-theme', prefix = 'color' }) => {
+  ({ schemes, selector = 'data-theme', prefix = 'tw-schemes' }) => {
     return ({ addBase }) => {
       Object.keys(schemes).forEach((theme) => {
         const selectorKey = getSelectorKey(selector, theme)
