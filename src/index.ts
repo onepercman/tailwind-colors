@@ -16,7 +16,7 @@ function isRGBColor(color: string): boolean {
 }
 
 function canOpacitize(color: string): boolean {
-  return isHexColor(color) || isRGBColor(color)
+  return isHexColor(color) || isRGBColor(color) || !color.includes('rgba')
 }
 
 function getRGB(color: string): string {
