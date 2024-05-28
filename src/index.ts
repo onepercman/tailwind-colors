@@ -16,7 +16,7 @@ function isRGBColor(color: string): boolean {
 }
 
 function canOpacitize(color: string): boolean {
-  return isHexColor(color) || isRGBColor(color) || !color.includes('rgba')
+  return isHexColor(color) || isRGBColor(color)
 }
 
 function getRGB(color: string): string {
@@ -64,7 +64,7 @@ function getColorEntries(colors: object, prefix: string) {
   return Object.fromEntries(
     Object.entries(flatten).map(([key, value]) => [
       key,
-      canOpacitize(flatten[key]) ? withOpacity(key, prefix) : value,
+      canOpacitize(flatten[key]) ? withOpacity(key, prefix) : `var(--${prefix}-${key})`,
     ])
   ) as RecursiveKeyValuePair<string, string>
 }
