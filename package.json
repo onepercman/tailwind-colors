@@ -1,6 +1,6 @@
 {
-  "name": "tailwind-colors",
-  "version": "0.0.1",
+  "name": "tailwind-schemes",
+  "version": "1.0.0",
   "author": "onepercman",
   "private": false,
   "main": "src/index.ts",

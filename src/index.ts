@@ -1,7 +1,7 @@
-import { TailwindColorsConfig } from "@types"
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette"
-import plugin from "tailwindcss/plugin"
-import { RecursiveKeyValuePair } from "tailwindcss/types/config"
+import { TailwindColorsConfig } from '@types'
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
+import plugin from 'tailwindcss/plugin'
+import { RecursiveKeyValuePair } from 'tailwindcss/types/config'
 
 function isHexColor(color: string): boolean {
   const hexColorRegex = RegExp(/^#([0-9a-f]{3}){1,2}$/i)
@@ -10,7 +10,7 @@ function isHexColor(color: string): boolean {
 
 function isRGBColor(color: string): boolean {
   const rgbStringRegex = RegExp(
-    /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/,
+    /^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/
   )
   return rgbStringRegex.test(color)
 }
@@ -40,16 +40,13 @@ function getRGB(color: string): string {
 function withOpacity(variableName: string, prefix?: string) {
   return ({ opacityValue }) => {
     if (opacityValue)
-      return `rgba(var(--${prefix ? `${prefix}-` : ""}${variableName}), ${opacityValue})`
-    return `rgb(var(--${prefix ? `${prefix}-` : ""}${variableName}))`
+      return `rgba(var(--${prefix ? `${prefix}-` : ''}${variableName}), ${opacityValue})`
+    return `rgb(var(--${prefix ? `${prefix}-` : ''}${variableName}))`
   }
 }
 
-function getSelectorKey(
-  selector: TailwindColorsConfig["selector"],
-  scheme: string,
-): string {
-  if (selector === "class") {
+function getSelectorKey(selector: TailwindColorsConfig['selector'], scheme: string): string {
+  if (selector === 'class') {
     return `.${scheme}`
   }
   return `[${selector}="${scheme}"]`
@@ -59,9 +56,9 @@ function getBaseVariables(colors: object, prefix?: string) {
   const flatten = flattenColorPalette(colors)
   return Object.fromEntries(
     Object.entries(flatten).map(([key]) => [
-      `--${prefix ? `${prefix}-` : ""}${key}`,
+      `--${prefix ? `${prefix}-` : ''}${key}`,
       getRGB(flatten[key]),
-    ]),
+    ])
   )
 }
 
@@ -72,12 +69,12 @@ function getColorEntries(colors: object, prefix?: string) {
     Object.entries(flatten).map(([key, value]) => [
       key,
       canOpacitize(flatten[key]) ? withOpacity(key, prefix) : value,
-    ]),
+    ])
   ) as RecursiveKeyValuePair<string, string>
 }
 
-export default plugin.withOptions<TailwindColorsConfig>(
-  ({ schemes, selector = "data-theme", prefix = "color" }) => {
+export const schemes = plugin.withOptions<TailwindColorsConfig>(
+  ({ schemes, selector = 'data-theme', prefix = 'color' }) => {
     return ({ addBase }) => {
       Object.keys(schemes).forEach((theme) => {
         const selectorKey = getSelectorKey(selector, theme)
@@ -105,5 +102,5 @@ export default plugin.withOptions<TailwindColorsConfig>(
         },
       },
     }
-  },
+  }
 )
