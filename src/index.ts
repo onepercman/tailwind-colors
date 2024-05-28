@@ -1,4 +1,4 @@
-import { TailwindColorsConfig } from '@types'
+import { Color, TailwindColorsConfig } from '@types'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import plugin from 'tailwindcss/plugin'
 import { RecursiveKeyValuePair } from 'tailwindcss/types/config'
@@ -67,6 +67,17 @@ function getColorEntries(colors: object, prefix: string) {
       canOpacitize(flatten[key]) ? withOpacity(key, prefix) : `var(--${prefix}-${key})`,
     ])
   ) as RecursiveKeyValuePair<string, string>
+}
+
+export function colorize<C extends Color>(color: C, key: keyof C = 500) {
+  if (typeof color !== 'object') return color
+  if (key in color && !color.DEFAULT) {
+    color.DEFAULT = color[key] as string
+  }
+  if (!color.foreground && color[950]) {
+    color.foreground = color[950]
+  }
+  return color
 }
 
 export const schemes = plugin.withOptions<TailwindColorsConfig>(

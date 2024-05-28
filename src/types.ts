@@ -13,6 +13,7 @@ type Color =
       950: string
       DEFAULT: string
       foreground: string
+      [key: string]: string
     }>
   | string
 
