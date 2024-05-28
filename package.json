@@ -1,6 +1,6 @@
 {
   "name": "tailwind-schemes",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "onepercman",
   "private": false,
   "main": "src/index.ts",
