@@ -2,6 +2,7 @@ import { Color, TailwindColorsConfig } from '@types'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import plugin from 'tailwindcss/plugin'
 import { RecursiveKeyValuePair } from 'tailwindcss/types/config'
+import { colorize, shades } from './color'
 
 function isHexColor(color: string): boolean {
   const hexColorRegex = RegExp(/^#([0-9a-f]{3}){1,2}$/i)
@@ -69,49 +70,7 @@ function getColorEntries(colors: object, prefix: string) {
   ) as RecursiveKeyValuePair<string, string>
 }
 
-export function colorize<C extends Color>(color: C, key: keyof C = 500) {
-  if (typeof color !== 'object') return color
-  if (key in color && !color.DEFAULT) {
-    color.DEFAULT = color[key] as string
-  }
-  if (!color.foreground && color[950]) {
-    color.foreground = color[950]
-  }
-  return color
-}
-
-export function shades(baseColor: string) {
-  const shades = {}
-  const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
-
-  // Convert the base color from hex to RGB
-  let r = parseInt(baseColor.slice(1, 3), 16)
-  let g = parseInt(baseColor.slice(3, 5), 16)
-  let b = parseInt(baseColor.slice(5, 7), 16)
-
-  // Function to convert RGB to hex
-  const rgbToHex = (r, g, b) => {
-    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
-  }
-
-  // Helper function to calculate a shade
-  const calculateShade = (color, factor) => {
-    return Math.round(color + factor * (factor > 0 ? 255 - color : color))
-  }
-
-  // Generate shades
-  steps.forEach((step) => {
-    const factor = (step - 500) / 1000 // Normalize the step to a range of -0.45 to 0.45
-    const shadeR = calculateShade(r, factor)
-    const shadeG = calculateShade(g, factor)
-    const shadeB = calculateShade(b, factor)
-    shades[step] = rgbToHex(shadeR, shadeG, shadeB)
-  })
-
-  return shades
-}
-
-export const schemes = plugin.withOptions<TailwindColorsConfig>(
+const schemes = plugin.withOptions<TailwindColorsConfig>(
   ({ schemes, global, selector = 'data-theme', prefix = 'tw-schemes' }) => {
     return ({ addBase }) => {
       if (typeof global === 'object') {
@@ -152,3 +111,5 @@ export const schemes = plugin.withOptions<TailwindColorsConfig>(
     }
   }
 )
+
+export { schemes, colorize, shades }
