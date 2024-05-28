@@ -80,6 +80,32 @@ export function colorize<C extends Color>(color: C, key: keyof C = 500) {
   return color
 }
 
+export function shades(baseColor: string) {
+  const shades = {}
+  const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+
+  // Convert the base color from hex to RGB
+  let r = parseInt(baseColor.slice(1, 3), 16)
+  let g = parseInt(baseColor.slice(3, 5), 16)
+  let b = parseInt(baseColor.slice(5, 7), 16)
+
+  // Function to convert RGB to hex
+  const rgbToHex = (r, g, b) => {
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+  }
+
+  // Generate shades
+  steps.forEach((step, index) => {
+    const factor = step / 1000 // Normalize the step to a 0-1 range
+    const shadeR = Math.round(r + (255 - r) * factor)
+    const shadeG = Math.round(g + (255 - g) * factor)
+    const shadeB = Math.round(b + (255 - b) * factor)
+    shades[step] = rgbToHex(shadeR, shadeG, shadeB)
+  })
+
+  return shades
+}
+
 export const schemes = plugin.withOptions<TailwindColorsConfig>(
   ({ schemes, global, selector = 'data-theme', prefix = 'tw-schemes' }) => {
     return ({ addBase }) => {

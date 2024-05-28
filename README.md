@@ -106,6 +106,16 @@ A helper function to manage color objects.
 
 - **Returns:** A color object with the default and foreground colors set if they are not already defined.
 
+### `shades`
+
+A helper function to generate a color shades.
+
+- **Parameters:**
+
+  - `baseColor` (string): A hex string color.
+
+- **Returns:** A color object with shades generated from 50-950
+
 ## Contributing
 
 Explain how others can contribute to the development of the plugin.
