@@ -19,8 +19,9 @@ type Color =
 type Scheme = Record<string, Color>
 
 type TailwindColorsConfig = {
-  selector?: "class" | string
+  selector?: 'class' | string
   prefix?: string
+  global?: Scheme
   schemes: Record<string, Scheme>
 }
 

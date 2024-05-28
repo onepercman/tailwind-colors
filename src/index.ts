@@ -70,8 +70,13 @@ function getColorEntries(colors: object, prefix: string) {
 }
 
 export const schemes = plugin.withOptions<TailwindColorsConfig>(
-  ({ schemes, selector = 'data-theme', prefix = 'tw-schemes' }) => {
+  ({ schemes, global, selector = 'data-theme', prefix = 'tw-schemes' }) => {
     return ({ addBase }) => {
+      if (typeof global === 'object') {
+        addBase({
+          ':root': getBaseVariables(global, prefix),
+        })
+      }
       Object.keys(schemes).forEach((theme) => {
         const selectorKey = getSelectorKey(selector, theme)
         const base = getBaseVariables(schemes[theme], prefix)
@@ -81,11 +86,16 @@ export const schemes = plugin.withOptions<TailwindColorsConfig>(
       })
     }
   },
-  ({ schemes, prefix = 'tw-schemes' }) => {
+  ({ schemes, global, prefix = 'tw-schemes' }) => {
     let colors = {}
+    if (typeof global === 'object') {
+      colors = {
+        ...colors,
+        ...global,
+      }
+    }
     Object.keys(schemes).forEach((scheme) => {
       const schemeColors = getColorEntries(schemes[scheme], prefix)
-
       colors = {
         ...colors,
         ...schemeColors,
