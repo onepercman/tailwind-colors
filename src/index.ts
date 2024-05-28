@@ -81,7 +81,7 @@ export const schemes = plugin.withOptions<TailwindColorsConfig>(
       })
     }
   },
-  ({ schemes, prefix }) => {
+  ({ schemes, prefix = 'tw-schemes' }) => {
     let colors = {}
     Object.keys(schemes).forEach((scheme) => {
       const schemeColors = getColorEntries(schemes[scheme], prefix)
