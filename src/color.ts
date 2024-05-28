@@ -42,16 +42,16 @@ const withTint = (intensity) => (hex) => tint(hex, intensity)
 const withShade = (intensity) => (hex) => shade(hex, intensity)
 
 const _variants = {
-  50: withTint(1),
-  100: withTint(0.8),
-  200: withTint(0.6),
-  300: withTint(0.4),
-  400: withTint(0.2),
+  50: withTint(0.95),
+  100: withTint(0.9),
+  200: withTint(0.75),
+  300: withTint(0.6),
+  400: withTint(0.3),
   500: (c) => c,
-  600: withShade(1),
-  700: withShade(0.8),
-  800: withShade(0.6),
-  900: withShade(0.4),
+  600: withShade(0.9),
+  700: withShade(0.6),
+  800: withShade(0.45),
+  900: withShade(0.3),
   950: withShade(0.2),
 }
 
