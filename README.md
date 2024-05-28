@@ -1,55 +1,111 @@
-# Tailwind colors
-Here is a plugin that can help you configure colors for both lightmode and darkmode if you have too many colors but don't want to use tailwind's built-in "dark:" keyword.
+# Tailwind Color Schemes Plugin
+
+This Tailwind CSS plugin provides a flexible way to define and use color schemes in your Tailwind CSS project. It allows you to configure global colors, scheme-specific colors, and use these colors throughout your project with optional opacity.
+
+## Installation
+
+1. Install Tailwind CSS if you haven't already:
+
+   ```bash
+   npm install tailwindcss -D
+   ```
+
+2. Install the plugin:
+
+   ```bash
+   npm install tailwind-schemes -D
+   ```
 
 ## Usage
 
-```ts
-module.exports = {
-  ...
-  darkMode: ["class", '[data-theme="dark"]'],
-  ...
-}
-```
+1. **Configuration**
 
-```ts
-module.exports = {
-  ...
-  plugins: [
-    require("tailwind-colors")({
-      light: {
-        selector: "[data-theme='light']", // specify your css light selector
-        color1: "red",
-        color2: {
-          100: "#00ff00",
-          200: "#0000ff",
-          DEFAULT: "#ff0000",
-        },
-        rgbColor: "rgb(0, 0, 255)",
-        rgbaColor: "rgba(255, 255, 255, 0.5)"
-      },
-      dark: {
-        selector: "[data-theme='dark']", // specify your css dark selector
-        color1: "blue",
-        color2: {
-          100: "#00ff00",
-          200: "#0000ff",
-          DEFAULT: "#ff0000",
-        },
-          rgbColor: "rgb(255, 0, 255)",
-          rgbaColor: "rgba(255, 255, 255, 0.5)"
-      },
-    }),
+   Add the plugin to your `tailwind.config.js`:
 
-  ],
-}
-```
+   ```js
+   // tailwind.config.js
+   const { schemes } = require('path-to-your-plugin')
 
-```ts 
-<p className="text-color1">Hello</p>
-<p className="text-color2">Hello</p>
-<p className="text-color2-100">Hello</p>
-<p className="text-color2-200">Hello</p>
-<p className="text-rgbColor">Hello</p>
-<p className="text-rgbaColor">Hello</p>
+   module.exports = {
+     // ... other configurations
+     plugins: [
+       schemes({
+         selector: 'data-theme', // Optional: "class" or any selector (default is 'data-theme' => [data-theme="dark/light/custom..."])
+         prefix: 'tw-schemes', // Optional: default is 'tw-schemes'
+         global: {
+           primary: '#3490dc',
+           secondary: '#ffed4a',
+           // More global colors...
+         },
+         schemes: {
+           light: {
+             primary: '#ffffff',
+             secondary: '#000000',
+             // More colors for the light theme...
+           },
+           dark: {
+             primary: '#000000',
+             secondary: '#ffffff',
+             // More colors for the dark theme...
+           },
+           customTheme: {
+             primary: '#00ff00',
+             secondary: '#ffff00',
+             // More colors for the dark theme...
+           },
+         },
+       }),
+     ],
+   }
+   ```
 
-```
+2. **Using the Colors**
+
+   - **CSS Variables**
+
+     The plugin generates CSS variables for your color schemes. You can use these variables in your CSS files:
+
+     ```css
+     .example-class {
+       color: var(--tw-schemes-primary);
+       background-color: var(--tw-schemes-secondary);
+     }
+     ```
+
+   - **Tailwind Classes**
+
+     Tailwind classes will be extended with your custom colors. You can use them directly in your HTML:
+
+     ```html
+     <div class="text-primary bg-secondary">
+       This text uses custom colors defined in the color schemes.
+     </div>
+     ```
+
+## API
+
+### `schemes`
+
+The main function to configure your color schemes.
+
+- **Parameters:**
+  - `config` (optional): An object with the following properties:
+    - `selector` (string): The CSS selector for the theme. Default is `'data-theme'`.
+    - `prefix` (string): The prefix for the CSS variables. Default is `'tw-schemes'`.
+    - `global` (object): A global color scheme.
+    - `schemes` (object): An object where keys are theme names and values are color schemes.
+
+### `colorize`
+
+A helper function to manage color objects.
+
+- **Parameters:**
+
+  - `color` (object|string): A color object or a string.
+  - `key` (optional, string): The key for the color. Default is `500`.
+
+- **Returns:** A color object with the default and foreground colors set if they are not already defined.
+
+## Contributing
+
+Explain how others can contribute to the development of the plugin.
