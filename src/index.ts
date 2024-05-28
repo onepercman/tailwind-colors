@@ -94,12 +94,17 @@ export function shades(baseColor: string) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
   }
 
+  // Helper function to calculate a shade
+  const calculateShade = (color, factor) => {
+    return Math.round(color + factor * (factor > 0 ? 255 - color : color))
+  }
+
   // Generate shades
-  steps.forEach((step, index) => {
-    const factor = step / 1000 // Normalize the step to a 0-1 range
-    const shadeR = Math.round(r + (255 - r) * factor)
-    const shadeG = Math.round(g + (255 - g) * factor)
-    const shadeB = Math.round(b + (255 - b) * factor)
+  steps.forEach((step) => {
+    const factor = (step - 500) / 1000 // Normalize the step to a range of -0.45 to 0.45
+    const shadeR = calculateShade(r, factor)
+    const shadeG = calculateShade(g, factor)
+    const shadeB = calculateShade(b, factor)
     shades[step] = rgbToHex(shadeR, shadeG, shadeB)
   })
 
