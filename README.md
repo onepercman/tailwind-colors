@@ -24,7 +24,7 @@ This Tailwind CSS plugin provides a flexible way to define and use color schemes
 
    ```js
    // tailwind.config.js
-   const { schemes } = require('tailwind-schemes')
+   const { schemes, resetCSS } = require('tailwind-schemes')
 
    module.exports = {
      // ... other configurations
@@ -54,6 +54,13 @@ This Tailwind CSS plugin provides a flexible way to define and use color schemes
              // More colors for the custom theme...
            },
          },
+       }),
+       reset({
+         html: 'text-primary', // Defined in schemes
+         body: {
+           padding: 0,
+         },
+         // More options...
        }),
      ],
    }
@@ -116,6 +123,26 @@ A helper function to generate a color shades.
 
 - **Returns:** A color object with shades generated from 50-950
 
+### `resetCSS`
+
+A helper plugin to add global css
+
+- **Parameters:**
+
+  - `options` (object): define any base options (using tailwind classnames or css-properties).
+
+- **Recommended setting**
+  ```json
+   "tailwindCSS.experimental.classRegex": [
+     ["resetCSS\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+   ]
+  ```
+
+```
+
+
+
 ## Contributing
 
 Explain how others can contribute to the development of the plugin.
+```

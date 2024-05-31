@@ -1,7 +1,7 @@
 import { ResetOptions } from '@types'
 import plugin from 'tailwindcss/plugin'
 
-export const reset = plugin.withOptions<ResetOptions>((options = {}) => {
+export const resetCSS = plugin.withOptions<ResetOptions>((options = {}) => {
   return ({ addBase }) => {
     Object.keys(options).forEach(function (option) {
       const value = options[option]
