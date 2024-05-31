@@ -26,4 +26,12 @@ type TailwindColorsConfig = {
   schemes: Record<string, Scheme>
 }
 
-export type { Color, Scheme, TailwindColorsConfig }
+type ResetProperty = string | string[] | object
+
+type ResetOptions = Partial<{
+  html: ResetProperty
+  body: ResetProperty
+  [key: string]: ResetProperty
+}>
+
+export type { Color, Scheme, TailwindColorsConfig, ResetOptions }
