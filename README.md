@@ -138,11 +138,6 @@ A helper plugin to add global css
    ]
   ```
 
-```
-
-
-
 ## Contributing
 
 Explain how others can contribute to the development of the plugin.
-```
