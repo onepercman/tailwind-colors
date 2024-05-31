@@ -1,8 +1,9 @@
-import { Color, TailwindColorsConfig } from '@types'
+import { TailwindColorsConfig } from '@types'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import plugin from 'tailwindcss/plugin'
 import { RecursiveKeyValuePair } from 'tailwindcss/types/config'
 import { colorize, shades } from './color'
+import { reset } from './reset'
 
 function isHexColor(color: string): boolean {
   const hexColorRegex = RegExp(/^#([0-9a-f]{3}){1,2}$/i)
@@ -112,4 +113,4 @@ const schemes = plugin.withOptions<TailwindColorsConfig>(
   }
 )
 
-export { schemes, colorize, shades }
+export { schemes, reset, colorize, shades }
