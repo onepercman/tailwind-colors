@@ -55,7 +55,7 @@ This Tailwind CSS plugin provides a flexible way to define and use color schemes
            },
          },
        }),
-       reset({
+       resetCSS({
          html: 'text-primary', // Defined in schemes
          body: {
            padding: 0,
