@@ -17,7 +17,23 @@ type Color =
     }>
   | string
 
-type Scheme = Record<string, Color>
+type Scheme = Partial<{
+  background: Color
+  foreground: Color
+  component: Color
+  primary: Color
+  secondary: Color
+  accent: Color
+  default: Color
+  info: Color
+  success: Color
+  warning: Color
+  error: Color
+  line: Color
+  muted: Color
+  invert: Color
+  [key: string]: Color
+}>
 
 type TailwindColorsConfig = {
   selector?: 'class' | string
