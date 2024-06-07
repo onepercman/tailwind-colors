@@ -1,12 +1,16 @@
 import { Color } from '@types'
 
-export function colorize<C extends Color>(color: C, key: keyof C = 500) {
+export function colorize<C extends Color>(
+  color: C,
+  defaultKey: keyof C = 500,
+  foregroundKey: keyof C = 950
+) {
   if (typeof color !== 'object') return color
-  if (key in color && !color.DEFAULT) {
-    color.DEFAULT = color[key] as string
+  if (defaultKey in color && !color.DEFAULT) {
+    color.DEFAULT = color[defaultKey] as string
   }
-  if (!color.foreground && color[950]) {
-    color.foreground = color[950]
+  if (foregroundKey in color && !color.DEFAULT) {
+    color.DEFAULT = color[foregroundKey] as string
   }
   return color
 }
