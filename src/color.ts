@@ -6,13 +6,14 @@ export function colorize<C extends Color>(
   foregroundKey: keyof C = 950
 ) {
   if (typeof color !== 'object') return color
-  if (defaultKey in color && !color.DEFAULT) {
-    color.DEFAULT = color[defaultKey] as string
+  const c = { ...color }
+  if (defaultKey in c && !c.DEFAULT) {
+    c.DEFAULT = c[defaultKey] as string
   }
-  if (foregroundKey in color && !color.foreground) {
-    color.foreground = color[foregroundKey] as string
+  if (foregroundKey in c && !c.foreground) {
+    c.foreground = c[foregroundKey] as string
   }
-  return color
+  return c
 }
 
 function parseColor(color: string) {
