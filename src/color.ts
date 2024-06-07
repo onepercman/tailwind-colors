@@ -9,8 +9,8 @@ export function colorize<C extends Color>(
   if (defaultKey in color && !color.DEFAULT) {
     color.DEFAULT = color[defaultKey] as string
   }
-  if (foregroundKey in color && !color.DEFAULT) {
-    color.DEFAULT = color[foregroundKey] as string
+  if (foregroundKey in color && !color.foreground) {
+    color.foreground = color[foregroundKey] as string
   }
   return color
 }
